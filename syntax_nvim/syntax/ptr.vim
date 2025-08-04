@@ -2,7 +2,7 @@ syn match ptrAnything /[_a-zA-Z]\+/
 
 syn region ptrString start="\"" skip="\\\"" end="\"" contains=NONE
 
-syn match ptrOps /:\|=\|\/\|\*\|-\|+\|<\|>/
+syn match ptrOps /:\|=\|\/\|\*\|-\|+\|<\|>\|!/
 syn match ptrPtr /\^\|&/
 
 syn match ptrBrackets /\[\|\]\|{\|}\|(\|)/

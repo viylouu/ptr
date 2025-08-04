@@ -3,38 +3,38 @@
 lib stdmem
 lib stdif
 lib stdarr
+lib stdloop
 
 conc :: {
+    // text: see string
     halloc print : [text] : &loc(2)
     conc : [text] : {
-        salloc eof :: &loc(6)
+        salloc i :: byte(4)
         salloc cur :: byte(8)
-        salloc fn : [text] : &loc(4)
-        conc : [text, i, eof, cur] : {
-            cur = text + i
-            jmp brch :: [cur^ != 0, if, nif]
-            conc : <salloc if :: &loc(this)> : { 
-                magic :: [ &string("write"), cur ]
-            }
-            conc : <salloc nif :: &loc(this)> : { jmp eof }
-            jmp fn :: [text, i+1, eof,cur]
+        salloc ifr :: &byte(1)
+        conc : <salloc if :: &loc(this)> [cur, ifr] : { ifr^ = cur^ != 0 }
+        conc : <salloc do :: &loc(this)> [text, i, cur] : {
+            cur^ = text + i
+            magic :: [ &string("write"), cur^ ]
+            i^ = i^ + 1
         }
-        jmp fn :: [text, 0, eof,cur]
+        jmp do_while :: [if :: [&cur, ifr], ifr, do :: [text, i, &cur]]
     }
 
     halloc readln : [buf] : &loc(4)
     conc : [buf] : {
-        salloc eof :: &loc(7)
+        /*salloc eof :: &loc(7)
         salloc cur :: byte(8)
         salloc fn : [buf] : &loc(5)
         salloc read_data :: &byte(12)
         conc : [buf, i, cur, eof, read_data] : {
-            jmp arradd :: [read_data, cur, 8,0]
-            jmp arradd :: [read_data, &i,  4,8]
+            jmp arrcpy :: [read_data, cur, 8,0]
+            jmp arrcpy :: [read_data, i,   4,8]
             magic :: [ &string("read"), read_data ]
             jmp fn :: [buf, i+1, cur,eof, read_data]
         }
-        jmp fn :: [buf, 0, cur,eof, read_data]
+        jmp fn :: [buf, 0, cur,eof, read_data]*/
+        // todo: make this
     }
 
     jmp free :: [print]

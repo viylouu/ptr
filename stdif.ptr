@@ -4,13 +4,16 @@ lib stdmem
 lib stdarr
 
 conc :: {
+    // cond: bool (not a pointer)
+    // true: function header (halloc/salloc)
+    // false: function header (halloc/salloc)
     halloc brch : [cond, true, false] : &loc(2)
     conc : [cond, true, false] : {
         salloc brch_data :: &byte(17)
 
-        jmp arradd :: [brch_data, cond,  1,0]
-        jmp arradd :: [brch_data, &true,  8,1]
-        jmp arradd :: [brch_data, &false, 8,9]
+        jmp arrcpy :: [brch_data, cond,  1,0]
+        jmp arrcpy :: [brch_data, &true,  8,1]
+        jmp arrcpy :: [brch_data, &false, 8,9]
 
         magic :: [ &string("brch"), brch_data ]
     }

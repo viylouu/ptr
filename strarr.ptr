@@ -2,25 +2,32 @@
 
 lib stdmem
 lib stdif
+lib stdloop
 
 conc :: {
-    halloc arradd : [arr, ptr, off, bytes] : &loc(2)
+    // arr: pointer to start of array
+    // ptr: pointer to data
+    // off: byte offset of ptr in arr
+    // bytes: bytes of ptr to copy
+    halloc arrcpy : [arr, ptr, off, bytes] : &loc(2)
     conc : [arr, ptr, off, bytes] : {
         salloc barr :: byte(8)
         salloc bptr :: byte(8)
         barr = arr + off
         bptr = ptr + off
 
-        salloc eof :: &loc(9)
-        salloc fn : [arr, ptr, off, bytes] : &loc(7)
-        conc : [barr, bptr, bytes, i, eof] : {
-            jmp brch :: [i < bytes, if,nif]
-            conc : <salloc if :: &loc(this)> : { (barr+i)^ = (bptr+i)^ }
-            conc : <salloc nif :: &loc(this)> : { jmp eof }
-            jmp fn :: [barr, bptr, bytes, i+1, eof]
+        salloc i :: &byte(4)
+        i^ = 0
+
+        salloc ifr :: &byte(1)
+        conc : <salloc if :: &loc(this)> [i, bytes, ifr] : { ifr^ = i < bytes }
+        conc : <salloc do :: &loc(this)> [i, barr, bptr]: { 
+            (barr+i^)^ = (bptr+i^)^ 
+            i^ = i^ + 1
         }
-        jmp fn :: [barr, bptr, bytes, 0, eof]
+
+        jmp while :: [if :: [i^, bytes, ifr], ifr, do :: [i, barr, bptr]]
     }
 
-    jmp free :: [arradd]
+    jmp free :: [arrcpy]
 }

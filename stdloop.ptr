@@ -1,0 +1,35 @@
+// stdloop.ptr
+
+lib stdmem
+lib stdif
+
+conc :: {
+    // cond_func: function header (halloc/salloc)
+    // cond_func_ret: pointer to bool
+    // do_func: function header (halloc/salloc)
+    halloc while : [cond_func, cond_func_ret, do_func] : &loc(2)
+    conc : [cond_func, cond_func_ret, do_func] : {
+        salloc fn :: &loc(2)
+        conc : [cond_func, cond_func_ret, do_func, fn] : {
+            salloc eof :: &loc(7)
+            jmp cond_func :: []
+            conc : <salloc if :: &loc(this)> [do_func] : { jmp do_func :: [] }
+            conc : <salloc nif :: &loc(this)> [eof] : { jmp eof }
+            jmp brch :: [cond_func_ret^ != 0, if :: [do_func], nif :: [eof]]
+            jmp fn :: [cond_func, cond_func_ret, do_func, fn]
+        }
+        jmp fn :: [cond_func, cond_func_ret, do_func, fn]
+    }
+
+    // cond_func: function header (halloc/salloc)
+    // cond_func_ret: pointer to bool
+    // do_func: function header (halloc/salloc)
+    halloc do_while : [cond_func, cond_func_ret, do_func] : &loc(4)
+    conc : [cond_func, cond_func_ret, do_func] : {
+        jmp do_func :: []
+        jmp while :: [cond_func, cond_func_ret, do_func]
+    }
+
+    jmp free :: [while]
+    jmp free :: [do_while]
+}
