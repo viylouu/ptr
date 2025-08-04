@@ -37,6 +37,8 @@ conc :: {
         // todo: make this
     }
 
-    jmp free :: [print]
-    jmp free :: [readln]
+    end :: {
+        jmp free :: [print]
+        jmp free :: [readln]
+    }
 }

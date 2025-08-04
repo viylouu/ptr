@@ -18,5 +18,7 @@ conc :: {
         magic :: [ &string("brch"), brch_data ]
     }
 
-    jmp free :: [brch]
+    end :: {
+        jmp free :: [brch]
+    }
 }

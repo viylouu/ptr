@@ -6,5 +6,7 @@ conc :: {
         magic :: [ &string("free"), ptr ]
     }
 
-    jmp free :: [free]
+    end :: {
+        jmp free :: [free]
+    }
 }

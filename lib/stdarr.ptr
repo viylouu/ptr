@@ -29,5 +29,7 @@ conc :: {
         jmp while :: [if :: [i^, bytes, ifr], ifr, do :: [i, barr, bptr]]
     }
 
-    jmp free :: [arrcpy]
+    end :: {
+        jmp free :: [arrcpy]
+    }
 }

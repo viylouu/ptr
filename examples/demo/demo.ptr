@@ -13,5 +13,7 @@ conc :: {
 
     jmp main :: []
 
-    jmp free :: [main]
+    end :: {
+        jmp free :: [main]
+    }
 }

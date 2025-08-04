@@ -30,6 +30,8 @@ conc :: {
         jmp while :: [cond_func, cond_func_ret, do_func]
     }
 
-    jmp free :: [while]
-    jmp free :: [do_while]
+    end :: {
+        jmp free :: [while]
+        jmp free :: [do_while]
+    }
 }

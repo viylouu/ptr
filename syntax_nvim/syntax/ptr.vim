@@ -9,7 +9,7 @@ syn match ptrBrackets /\[\|\]\|{\|}\|(\|)/
 
 syn match ptrNum "[0-9]"
 
-syn keyword ptrFuncs loc string conc jmp magic byte
+syn keyword ptrFuncs loc string conc jmp magic byte end
 syn keyword ptrLib lib contained
 
 syn match ptrLibname "lib .*" contains=ptrLib
