@@ -2,6 +2,7 @@ package main
 
 import "core:fmt"
 import "core:os"
+import "core:strings"
 
 main :: proc() {
     args := os.args[1:]
@@ -29,13 +30,24 @@ main :: proc() {
         file := string(data)
 
         is_comment := false
+        curln := strings.builder_make_len(len(file))
 
         i := 0
         for i < len(file) {
             if file[i] == '/' do if file[i+1] == '/' do for file[i] != '\n' do i += 1
-            if i >= len(file) do break
+            if i < len(file) {
+                strings.write_rune(&curln, rune(file[i]))
+                if file[i] == '\n' {
+                    cur := strings.clone(strings.to_string(curln))
+                    wa: bool
+                    cur, wa = strings.remove_all(cur, "\t")
+                    cur, wa = strings.remove_all(cur, "  ")
+                    if cur != "\n" do fmt.print(cur)
+                    strings.builder_reset(&curln)
+                    delete(cur)
+                }
+            }
 
-            fmt.print(rune(file[i]))
             i += 1
         }
     }
