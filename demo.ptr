@@ -1,0 +1,17 @@
+// demo.ptr
+
+lib stdio
+lib stdif
+lib stdmem
+
+conc :: {
+    halloc main :: &loc(2)
+    conc :: {
+        salloc hello :: &string("helloo douglas douglas")
+        jmp print :: [hello]
+    }
+
+    jmp main :: []
+
+    jmp free :: [main]
+}

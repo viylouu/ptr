@@ -1,0 +1,26 @@
+// stdarr.ptr
+
+lib stdmem
+lib stdif
+
+conc :: {
+    halloc arradd : [arr, ptr, off, bytes] : &loc(2)
+    conc : [arr, ptr, off, bytes] : {
+        salloc barr :: byte(8)
+        salloc bptr :: byte(8)
+        barr = arr + off
+        bptr = ptr + off
+
+        salloc eof :: &loc(9)
+        salloc fn : [arr, ptr, off, bytes] : &loc(7)
+        conc : [barr, bptr, bytes, i, eof] : {
+            jmp brch :: [i < bytes, if,nif]
+            conc : <salloc if :: &loc(this)> : { (barr+i)^ = (bptr+i)^ }
+            conc : <salloc nif :: &loc(this)> : { jmp eof }
+            jmp fn :: [barr, bptr, bytes, i+1, eof]
+        }
+        jmp fn :: [barr, bptr, bytes, 0, eof]
+    }
+
+    jmp free :: [arradd]
+}

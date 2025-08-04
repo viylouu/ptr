@@ -1,0 +1,10 @@
+// stdmem.ptr
+
+conc :: {
+    halloc free : [ptr] : &loc(4)
+    conc : [ptr] : {
+        magic :: [ &string("free"), ptr ]
+    }
+
+    jmp free :: [free]
+}

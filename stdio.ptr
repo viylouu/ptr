@@ -1,0 +1,42 @@
+// stdio.ptr
+
+lib stdmem
+lib stdif
+lib stdarr
+
+conc :: {
+    halloc print : [text] : &loc(2)
+    conc : [text] : {
+        salloc eof :: &loc(6)
+        salloc cur :: byte(8)
+        salloc fn : [text] : &loc(4)
+        conc : [text, i, eof, cur] : {
+            cur = text + i
+            jmp brch :: [cur^ != 0, if, nif]
+            conc : <salloc if :: &loc(this)> : { 
+                magic :: [ &string("write"), cur ]
+            }
+            conc : <salloc nif :: &loc(this)> : { jmp eof }
+            jmp fn :: [text, i+1, eof,cur]
+        }
+        jmp fn :: [text, 0, eof,cur]
+    }
+
+    halloc readln : [buf] : &loc(4)
+    conc : [buf] : {
+        salloc eof :: &loc(7)
+        salloc cur :: byte(8)
+        salloc fn : [buf] : &loc(5)
+        salloc read_data :: &byte(12)
+        conc : [buf, i, cur, eof, read_data] : {
+            jmp arradd :: [read_data, cur, 8,0]
+            jmp arradd :: [read_data, &i,  4,8]
+            magic :: [ &string("read"), read_data ]
+            jmp fn :: [buf, i+1, cur,eof, read_data]
+        }
+        jmp fn :: [buf, 0, cur,eof, read_data]
+    }
+
+    jmp free :: [print]
+    jmp free :: [readln]
+}
